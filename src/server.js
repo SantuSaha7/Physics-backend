@@ -30,10 +30,19 @@ const app = express();
 // ✅ CORS — FIXED (important)
 app.use(
   cors({
-    origin: true, // allow all origins (Vercel, localhost, etc.)
+    origin: [
+      "http://localhost:3000",
+      "https://physics-frontend-ten.vercel.app",
+    ],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
+
+// 🔥 preflight explicitly allow
+app.options("*", cors());
+
 
 // ✅ Preflight support
 app.options("*", cors());
