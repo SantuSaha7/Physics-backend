@@ -6,7 +6,7 @@ import connectDB from "./config/db.js";
 
 // ================= ROUTES =================
 
-// STUDENT (login + /me)
+// STUDENT
 import authRoutes from "./routes/auth.routes.js";
 import chapterRoutes from "./routes/chapter.routes.js";
 import classRoutes from "./routes/class.routes.js";
@@ -14,7 +14,7 @@ import pdfRoutes from "./routes/pdf.routes.js";
 import mockRoutes from "./routes/mock.routes.js";
 import resultRoutes from "./routes/result.routes.js";
 
-// ADMIN / PANEL
+// PANEL
 import panelAuthRoutes from "./routes/panel.auth.routes.js";
 import panelRoutes from "./routes/panel.routes.js";
 
@@ -27,23 +27,27 @@ const app = express();
 
 // ================= MIDDLEWARE =================
 
+// ✅ CORS — FIXED (important)
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: true, // allow all origins (Vercel, localhost, etc.)
     credentials: true,
   })
 );
 
+// ✅ Preflight support
+app.options("*", cors());
+
+// ✅ Body parser
 app.use(express.json());
 
-// ================= ROUTES REGISTER =================
+// ================= ROUTES =================
 
-// 🔐 STUDENT AUTH (login + /me)
+// 🔐 STUDENT AUTH
 app.use("/api/auth", authRoutes);
 
 // 🔐 PANEL AUTH
 app.use("/api/panel/auth", panelAuthRoutes);
-// frontend alias
 app.use("/api/panel/login", panelAuthRoutes);
 
 // 🧑‍🏫 PANEL APIs
