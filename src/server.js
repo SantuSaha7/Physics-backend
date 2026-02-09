@@ -34,11 +34,16 @@ app.use(
       "http://localhost:3000",
       "https://physics-frontend-ten.vercel.app",
     ],
+    credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
   })
 );
+
+app.options("*", cors()); // 🔥 THIS LINE IS CRITICAL
+
+app.use(express.json());
+
 
 // 🔥 preflight explicitly allow
 app.options("*", cors());
