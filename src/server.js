@@ -33,6 +33,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://physics-frontend-ten.vercel.app",
+      "https://physicsbysantu.vercel.app"
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
