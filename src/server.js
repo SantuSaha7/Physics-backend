@@ -27,13 +27,13 @@ const app = express();
 
 // ================= MIDDLEWARE =================
 
-// ✅ CORS — FIXED (important)
+// ✅ CORS
 app.use(
   cors({
     origin: [
       "http://localhost:3000",
       "https://physics-frontend-ten.vercel.app",
-      "https://physicsbysantu.vercel.app"
+      "https://physicsbysantu.vercel.app",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -41,16 +41,7 @@ app.use(
   })
 );
 
-app.options("*", cors()); // 🔥 THIS LINE IS CRITICAL
-
-app.use(express.json());
-
-
-// 🔥 preflight explicitly allow
-app.options("*", cors());
-
-
-// ✅ Preflight support
+// ✅ Preflight
 app.options("*", cors());
 
 // ✅ Body parser
@@ -85,6 +76,10 @@ app.get("/", (req, res) => {
   res.status(200).send("Physics By Santu Sir API running 🚀");
 });
 
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 // ================= 404 =================
 
 app.use((req, res) => {
@@ -93,15 +88,9 @@ app.use((req, res) => {
 
 // ================= START =================
 
-const PORT = process.env.PORT || 5001;
+// 🔥 FIX: ONLY ONE listen, ONLY process.env.PORT
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
-});
-app.get("/api/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
 });
