@@ -18,6 +18,9 @@ import resultRoutes from "./routes/result.routes.js";
 import panelAuthRoutes from "./routes/panel.auth.routes.js";
 import panelRoutes from "./routes/panel.routes.js";
 
+// ✅ FEES
+import feeRoutes from "./routes/feeRoutes.js";
+
 // ================= CONFIG =================
 
 dotenv.config();
@@ -27,7 +30,6 @@ const app = express();
 
 // ================= MIDDLEWARE =================
 
-// ✅ CORS
 app.use(
   cors({
     origin: [
@@ -41,10 +43,6 @@ app.use(
   })
 );
 
-// ✅ Preflight
-app.options("*", cors());
-
-// ✅ Body parser
 app.use(express.json());
 
 // ================= ROUTES =================
@@ -58,6 +56,9 @@ app.use("/api/panel/login", panelAuthRoutes);
 
 // 🧑‍🏫 PANEL APIs
 app.use("/api/panel", panelRoutes);
+
+// 💰 FEES (Sir + Student)
+app.use("/api/fees", feeRoutes);
 
 // 📚 ACADEMIC DATA
 app.use("/api/classes", classRoutes);
@@ -88,8 +89,7 @@ app.use((req, res) => {
 
 // ================= START =================
 
-// 🔥 FIX: ONLY ONE listen, ONLY process.env.PORT
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
