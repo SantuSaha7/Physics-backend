@@ -48,12 +48,34 @@ export const getFeesByClass = async (req, res) => {
       }
     }
 
-    // populate student name/email
+    // populate student safely
     const populated = await StudentFee.find({ classId, year })
-      .populate("studentId", "name email")
+      .populate({
+        path: "studentId",
+        select: "_id name fullName username email",
+      })
       .sort({ createdAt: 1 });
 
-    res.json(populated);
+    // ensure fallback name exists (NO delete, only transform response)
+    const safeResponse = populated.map((record) => {
+      const student = record.studentId;
+
+      let displayName =
+        student?.name ||
+        student?.fullName ||
+        student?.username ||
+        "Unnamed Student";
+
+      return {
+        ...record.toObject(),
+        studentId: {
+          ...student?._doc,
+          displayName,
+        },
+      };
+    });
+
+    res.json(safeResponse);
   } catch (err) {
     console.error("getFeesByClass error:", err);
     res.status(500).json({ message: "Failed to fetch fees" });
@@ -106,7 +128,7 @@ export const updateStudentFee = async (req, res) => {
 ========================= */
 export const getMyFees = async (req, res) => {
   try {
-    const studentId = req.user._id; // FIXED
+    const studentId = req.user._id;
     const year = parseInt(req.query.year) || new Date().getFullYear();
 
     const fee = await StudentFee.findOne({ studentId, year });
